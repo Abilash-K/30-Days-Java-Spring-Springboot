@@ -49,6 +49,29 @@ All 30 days created with:
 - Complete REST API example
 - 5 practical exercises
 
+#### Day 04: Dependency Injection and IoC Container
+- **12,000+ words** covering DI and IoC principles
+- Understanding IoC container (BeanFactory vs ApplicationContext)
+- Three types of dependency injection (Constructor, Setter, Field)
+- Bean lifecycle with detailed callbacks
+- Bean scopes (Singleton, Prototype, Request, Session, Application)
+- Autowiring strategies and @Qualifier/@Primary
+- Handling circular dependencies
+- Complete e-commerce order system example
+- Best practices and anti-patterns
+
+#### Day 05: Spring MVC and REST APIs
+- **15,000+ words** on building REST APIs
+- REST principles and architectural constraints
+- Spring MVC request processing flow
+- Complete CRUD operations with all HTTP methods
+- Request handling (Path variables, Request params, Headers, Cookies)
+- Response handling with ResponseEntity
+- HTTP status codes and when to use them
+- Content negotiation and API versioning strategies
+- HATEOAS implementation
+- Complete e-commerce product API example
+
 #### Day 06: JPA and Database Integration
 - **19,000+ words** of comprehensive content
 - JPA concepts and benefits
@@ -59,6 +82,28 @@ All 30 days created with:
 - Relationships (One-to-One, One-to-Many, Many-to-Many)
 - Transaction management
 - Best practices and optimizations
+
+#### Day 07: Exception Handling and Validation
+- **14,000+ words** on error handling
+- Global exception handling with @RestControllerAdvice
+- Custom exception hierarchy
+- Bean Validation (JSR-380) with all annotations
+- Custom validators and validation groups
+- Standardized error responses
+- Logging and monitoring exceptions
+- Complete user management API with full error handling
+- Best practices for production
+
+#### Day 08: Spring Boot Configuration Management
+- **13,000+ words** on configuration
+- application.properties vs application.yml comparison
+- Spring Profiles for environment-specific configs
+- @ConfigurationProperties for type-safe configuration
+- Environment variables and externalized configuration
+- Configuration priority and property placeholders
+- Spring Cloud Config for centralized configuration
+- Complete multi-environment application example
+- Security best practices for sensitive data
 
 #### Day 12: Microservices Introduction
 - **15,000+ words** covering architecture
@@ -105,10 +150,10 @@ Days 4-5, 7-11, 13-19, 21-29:
 - **Total Days**: 30
 - **Total Folders**: 30
 - **Total README Files**: 31 (30 days + main)
-- **Fully Detailed Days**: 7 (Days 1, 2, 3, 6, 12, 20, 30)
+- **Fully Detailed Days**: 11 (Days 1, 2, 3, 4, 5, 6, 7, 8, 12, 20, 30)
 - **Java Code Examples**: 2 (Lambda and Stream examples)
-- **Total Words in Detailed Days**: ~110,000+ words
-- **Placeholder Days**: 23 (with overviews ready for expansion)
+- **Total Words in Detailed Days**: ~160,000+ words (50,000+ words added)
+- **Placeholder Days**: 19 (with overviews ready for expansion)
 
 ## 🎯 Learning Path Coverage
 
@@ -116,12 +161,14 @@ Days 4-5, 7-11, 13-19, 21-29:
 - Day 1: ✅ Complete (Java 8/11)
 - Day 2: ✅ Complete (Setup)
 - Day 3: ✅ Complete (Basics)
-- Day 4-5: 📝 Placeholder (DI, REST APIs)
+- Day 4: ✅ Complete (Dependency Injection & IoC - 1000+ lines)
+- Day 5: ✅ Complete (REST APIs - 1300+ lines)
 - Day 6: ✅ Complete (JPA/Database)
-- Day 7: 📝 Placeholder (Exception Handling)
+- Day 7: ✅ Complete (Exception Handling - 1260+ lines)
 
 ### Week 2: Advanced Spring Boot ⚡
-- Day 8-11: 📝 Placeholder (Config, Security, JWT)
+- Day 8: ✅ Complete (Configuration Management - 1140+ lines)
+- Day 9-11: 📝 Placeholder (Actuator, Security, JWT)
 - Day 12: ✅ Complete (Microservices Intro)
 - Day 13-14: 📝 Placeholder (Eureka, Gateway)
 
@@ -188,7 +235,7 @@ Each Day Folder:
 
 ### Completeness
 - **Structure**: 100% complete (all 30 days outlined)
-- **Detailed content**: 23% complete (7 out of 30 days)
+- **Detailed content**: 37% complete (11 out of 30 days)
 - **Framework**: 100% complete (navigation, guides, structure)
 - **Ready for expansion**: Yes
 
