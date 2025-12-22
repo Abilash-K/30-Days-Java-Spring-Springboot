@@ -252,6 +252,10 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
+        // Using Optional.map() with ResponseEntity is a clean pattern:
+        // - If user exists: returns 200 OK with user data
+        // - If user doesn't exist: returns 404 Not Found
+        // This approach avoids exceptions for expected scenarios (user not found is not exceptional)
         return userService.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
@@ -267,6 +271,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, 
                                            @Valid @RequestBody UpdateUserRequest request) {
+        // Same Optional pattern - gracefully handles non-existent resources
         return userService.update(id, request)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());

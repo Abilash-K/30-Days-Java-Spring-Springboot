@@ -183,8 +183,11 @@ public class AppConfig {
     }
     
     @Bean
-    public OrderService orderService() {
-        return new OrderService(userRepository(), emailService(), paymentGateway(null));
+    public OrderService orderService(UserRepository userRepository, 
+                                      EmailService emailService, 
+                                      PaymentGateway paymentGateway) {
+        // Dependencies are injected by Spring, not called directly
+        return new OrderService(userRepository, emailService, paymentGateway);
     }
 }
 
