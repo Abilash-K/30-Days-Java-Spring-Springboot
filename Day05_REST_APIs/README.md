@@ -2,6 +2,7 @@
 
 ## 📋 Table of Contents
 - [Introduction](#introduction)
+- [The Evolution: Spring MVC to Spring Boot REST](#the-evolution-spring-mvc-to-spring-boot-rest)
 - [REST Principles](#rest-principles)
 - [Spring MVC Architecture](#spring-mvc-architecture)
 - [Building REST APIs](#building-rest-apis)
@@ -28,6 +29,299 @@ Welcome to Day 5! Today we'll master **Spring MVC** and learn how to build robus
 - Building CRUD REST APIs
 - Content negotiation and versioning
 - Industry-standard API design patterns
+- **How REST API development evolved from Spring MVC to Spring Boot**
+
+---
+
+## The Evolution: Spring MVC to Spring Boot REST
+
+### The Journey of REST APIs in Spring
+
+Understanding this evolution helps you appreciate why Spring Boot is so powerful and what's happening "under the hood."
+
+### Era 1: Traditional Spring MVC (Pre-Spring Boot)
+
+**Step 1: Configure Web Application**
+
+```xml
+<!-- web.xml - Required for ALL Spring MVC apps -->
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <!-- Configure DispatcherServlet -->
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!-- Context Loader Listener -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
+    </context-param>
+
+</web-app>
+```
+
+**Step 2: Configure Dispatcher Servlet**
+
+```xml
+<!-- dispatcher-servlet.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- Enable annotation-driven MVC -->
+    <mvc:annotation-driven>
+        <!-- Configure JSON converter -->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper"/>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- Component scanning -->
+    <context:component-scan base-package="com.example.controller"/>
+
+    <!-- View Resolver (for MVC, not needed for REST) -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+</beans>
+```
+
+**Step 3: Create Controller (without @RestController)**
+
+```java
+// Traditional Spring MVC - @ResponseBody required on each method!
+@Controller
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    @ResponseBody  // Required! Without this, Spring looks for a view
+    public List<User> getAllUsers() {
+        return userService.findAll();
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public User getUser(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    @ResponseBody
+    public User createUser(@RequestBody User user) {
+        return userService.save(user);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ResponseBody
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userService.update(id, user);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void deleteUser(@PathVariable Long id) {
+        userService.delete(id);
+    }
+}
+```
+
+**Step 4: Package as WAR and Deploy to External Server**
+
+```bash
+# Build WAR file
+mvn package
+
+# Deploy to Tomcat/Jetty/WebLogic/WebSphere
+cp target/myapp.war /opt/tomcat/webapps/
+```
+
+### Era 2: Spring 4.0+ (Annotation Improvements)
+
+**Introduced @RestController and Shortcut Annotations:**
+
+```java
+// @RestController = @Controller + @ResponseBody on all methods
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping  // New! Replaces @RequestMapping(method = GET)
+    public List<User> getAllUsers() {
+        return userService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    @PostMapping  // New! Replaces @RequestMapping(method = POST)
+    public User createUser(@RequestBody User user) {
+        return userService.save(user);
+    }
+
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userService.update(id, user);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.delete(id);
+    }
+}
+```
+
+**Still required:**
+- web.xml configuration
+- dispatcher-servlet.xml
+- External server deployment
+
+### Era 3: Spring Boot (Modern Era) ✨
+
+**Everything Auto-Configured!**
+
+```java
+// Application.java - That's IT for configuration!
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+
+// Controller - Same as Spring 4.0+, but NO additional configuration!
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    private final UserService userService;
+
+    // Constructor injection - no @Autowired needed!
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        return userService.findById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserRequest request) {
+        User user = userService.create(request);
+        URI location = URI.create("/api/users/" + user.getId());
+        return ResponseEntity.created(location).body(user);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, 
+                                           @Valid @RequestBody UpdateUserRequest request) {
+        return userService.update(id, request)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        if (userService.delete(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+}
+```
+
+**Run with embedded server:**
+```bash
+# Just run!
+mvn spring-boot:run
+
+# Or
+java -jar myapp.jar
+```
+
+### Comparison: Spring MVC vs Spring Boot REST
+
+| Aspect | Traditional Spring MVC | Spring Boot |
+|--------|----------------------|-------------|
+| **Configuration Files** | web.xml + dispatcher-servlet.xml | NONE (auto-config) |
+| **Server** | External (Tomcat WAR deploy) | Embedded (just run) |
+| **@ResponseBody** | Required on each method | Auto via @RestController |
+| **JSON Support** | Manual message converter config | Auto-configured |
+| **Content Negotiation** | Manual configuration | Auto-configured |
+| **Packaging** | WAR | JAR (executable) |
+| **Startup Time** | Minutes (server + deploy) | Seconds |
+| **Dependencies** | Manual version management | Starter POMs |
+| **Port Configuration** | server.xml (external) | application.properties |
+
+### What Spring Boot Auto-Configures for REST
+
+When you add `spring-boot-starter-web`:
+
+```java
+// Spring Boot automatically configures:
+// 1. Embedded Tomcat/Jetty/Undertow
+// 2. DispatcherServlet
+// 3. Jackson JSON converter (MappingJackson2HttpMessageConverter)
+// 4. Default error handling (/error endpoint)
+// 5. Static resource serving (/static, /public, /resources)
+// 6. Content negotiation
+// 7. Character encoding (UTF-8)
+// 8. Request/Response logging (configurable)
+```
+
+---
 
 ## REST Principles
 
